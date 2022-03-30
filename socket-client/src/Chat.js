@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import {MessagePackHubProtocol} from "@microsoft/signalr-protocol-msgpack";
 import ChatInput from "./ChatInput";
 import ChatWindow from "./ChatWindow";
 
@@ -14,6 +15,7 @@ const Chat = () => {
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
       .withUrl("https://localhost:7086/hubs/chat")
+      .withHubProtocol(new MessagePackHubProtocol())
       .withAutomaticReconnect()
       .build();
 
@@ -29,6 +31,7 @@ const Chat = () => {
           console.log("Connected!");
 
           connection.on("ReceiveMessage", (message) => {
+            console.info(message);
             const updatedChat = [...latestChat.current];
             updatedChat.push(message);
 
@@ -41,8 +44,8 @@ const Chat = () => {
 
   const sendMessage = async (user, message) => {
     const chatMessage = {
-      user: user,
-      message: message,
+      User: user,
+      Message: message,
     };
 
     if (connection._connectionStarted) {

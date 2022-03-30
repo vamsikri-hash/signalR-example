@@ -1,4 +1,3 @@
-
 namespace SocketServer.Models
 {
     public class ChatMessage
